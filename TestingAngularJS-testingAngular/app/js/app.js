@@ -1,10 +1,57 @@
 var testingAngluarApp = angular.module('testingAngularApp', []);
 
-testingAngluarApp.controller('testingAngularCtrl', function ($scope, $http, $timeout, $q) {
+// Weather API Service 
+testingAngluarApp.factory('weatherService', function ($http) {
+
+  var weatherAPIurl = 'http://api.openweathermap.org/data/2.5/weather?q=',
+    weatherAPIkey = '&appid=' + '188946ef3a1a518080641674e6ddeaed',
+    weather, temp, errorMsg;
+
+  var getWeatherTemp = function (city, country) {
+    return $http({
+      method: 'GET',
+      url: weatherAPIurl + city + ',' + country + weatherAPIkey
+    });
+    // .then(
+    //   function success(response) {
+    //     if(response){
+    //       weather = response.data.weather[0].main;
+    //       temp = Math.round(response.data.main.temp - 273);
+    //       return weather + ' ' + temp;
+    //     }
+    //   },function reject(reason) {
+    //     errorMsg = reason;
+    //     return errorMsg;
+    //   }
+    // )
+  }
+
+  // Factories must return an object
+  return {
+    getWeatherTemp: function () {
+      return getWeatherTemp(city, country);
+    }
+  }
+
+})
+
+testingAngluarApp.controller('testingAngularCtrl', function ($rootScope,$scope, $http, $timeout, $q, weatherService) {
 
   $scope.title = "Testing AngularJS Applications";
   $scope.color = 'red';
 
+  // Weather API
+  $scope.weatherApiUrl = 'http://api.openweathermap.org/data/2.5/weather?q=',
+  $scope.weatherApiKey = '&appid=' + '188946ef3a1a518080641674e6ddeaed';
+
+  $scope.removeDestination = function (index) {
+    if($scope.destinations.length === 0)
+    return;
+
+    $scope.destinations.splice(index, 1);
+  }
+    
+  $rootScope.errorMsg = undefined;
 
   $scope.destinations = [];
   $scope.newDestination = {
@@ -13,54 +60,103 @@ testingAngluarApp.controller('testingAngularCtrl', function ($scope, $http, $tim
   };
 
   $scope.addDestination = function () {
-    $scope.destinations.push(
-    {
+    $scope.destinations.push({
       city: $scope.newDestination.city,
       country: $scope.newDestination.country
     });
   };
-
-  $scope.removeDestination = function (index) {
-    if($scope.destinations.length === 0)
-    return;
-
-    $scope.destinations.splice(index, 1);
-  }
-
-  // Weather API
-  var weatherAPIurl = 'http://api.openweathermap.org/data/2.5/weather?q=',
-      weatherAPIkey = '&appid=' + '188946ef3a1a518080641674e6ddeaed';
-
-  $scope.errorMsg = undefined;
-
-  $scope.getWeather = function (destination) {
-    $http.get(weatherAPIurl + destination.city + ',' + destination.country + weatherAPIkey)
-    .then(function success(response) {
-      if(response){
-        // Assign a new object to the destination object
-        // Note that it is bounded to the scope object
-        destination.climate = {}; 
-        destination.climate.weather = response.data.weather[0].main;
-        destination.climate.temp = Math.round(response.data.main.temp - 273);
-        // console.log(response);
-      } 
-    }, function reject(reason) {
-      $scope.errorMsg = 'Invalid location';
-      console.log(reason);
-    })
-  }
-
-  $scope.$watch('errorMsg', function () {
-    if($scope.errorMsg){
+ 
+  $rootScope.$watch('errorMsg', function () {
+    if($rootScope.errorMsg){
       $timeout(function () {
-        $scope.errorMsg = undefined;
+        $rootScope.errorMsg = undefined;
       }, 3000)
     }
   })
 
+  // Using the weather service
+  //console.log(weatherService.getWeatherTemp('Lagos', 'Nigeria'));
+ 
 });
 
+// Filters return a function
+testingAngluarApp.filter('warmestDestinations', function () {
 
+  // Filters return functions and accept an input
+  // Receives the destinations array -- and the ng-repeat iterates through  
+  // warmDests[] tracking the displayed index to output the last item on the array  
+  return function (destinations, minimum) {
+    var warmDests = [];
+    
+    angular.forEach(destinations, function (dest) {
+
+      // If the climate property exists -- climate property only exists when updaeWeather() is called
+      if(dest.climate && dest.climate.temp && dest.climate.temp >= minimum){
+        warmDests.push(dest);  
+      }
+    })
+    return warmDests;
+  }
+})
+
+testingAngluarApp.filter('convertToCelcius', function () {
+  
+  // Filters return functions and accept an input
+  return function (destinations) {
+    var celcius = [];
+
+    angular.forEach(destinations, function (dest) {
+      if (dest.climate && dest.climate.temp) {
+        dest.climate.temp = Math.round(dest.climate.temp - 273);
+        celcius.push(dest);
+      }
+    })
+   
+    return celcius;
+  }
+
+})
+
+testingAngluarApp.directive('destinationsDirective', function () {
+
+      var controller = function ($http, $rootScope, $scope) {
+        console.log($scope.weatherApiUrl)
+        $scope.getWeather = function (destination) {
+          $http.get($scope.weatherApiUrl + destination.city + ',' + destination.country + $scope.weatherApiKey)
+          .then(function success(response) {
+            if(response){
+              // Assign a new object to the destination object
+              // Note that it is bounded to the scope object
+              destination.climate = {}; 
+              destination.climate.weather = response.data.weather[0].main;
+              destination.climate.temp = Math.round(response.data.main.temp - 273);
+              // console.log(response);
+            } 
+          }, function reject(reason) {
+            $rootScope.errorMsg = 'Invalid location';
+            console.log(reason);
+          })
+        }
+      
+      }
+  
+      // Directives return an object called the DDO --- Directive Definition Object
+      return {
+          scope: {
+            destination: '=',
+            weatherApiKey: '@',
+            weatherApiUrl: '@',
+            onRemove: '&'
+          },
+          template: '<span>{{destination.city}}, {{destination.country}}'+ 
+                      '<span ng-if="destination.climate.weather"> --- {{destination.climate.weather }}, {{destination.climate.temp}}</span>'+
+                      '<button ng-click="onRemove()">Remove</button>'+
+                      '<button ng-click="getWeather(destination)">Update Weather</button>'+          
+                    '</span>',
+          controller: controller
+      }
+
+})
 
 testingAngluarApp.directive('card', function () {
     return {
