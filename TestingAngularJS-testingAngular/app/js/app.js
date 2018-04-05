@@ -1,41 +1,6 @@
 var testingAngluarApp = angular.module('testingAngularApp', []);
 
-// Weather API Service 
-testingAngluarApp.factory('weatherService', function ($http) {
-
-  var weatherAPIurl = 'http://api.openweathermap.org/data/2.5/weather?q=',
-    weatherAPIkey = '&appid=' + '188946ef3a1a518080641674e6ddeaed',
-    weather, temp, errorMsg;
-
-  var getWeatherTemp = function (city, country) {
-    return $http({
-      method: 'GET',
-      url: weatherAPIurl + city + ',' + country + weatherAPIkey
-    });
-    // .then(
-    //   function success(response) {
-    //     if(response){
-    //       weather = response.data.weather[0].main;
-    //       temp = Math.round(response.data.main.temp - 273);
-    //       return weather + ' ' + temp;
-    //     }
-    //   },function reject(reason) {
-    //     errorMsg = reason;
-    //     return errorMsg;
-    //   }
-    // )
-  }
-
-  // Factories must return an object
-  return {
-    getWeatherTemp: function () {
-      return getWeatherTemp(city, country);
-    }
-  }
-
-})
-
-testingAngluarApp.controller('testingAngularCtrl', function ($rootScope,$scope, $http, $timeout, $q, weatherService) {
+  testingAngluarApp.controller('testingAngularCtrl', function ($rootScope,$scope, $http, $timeout, $q) {
 
   $scope.title = "Testing AngularJS Applications";
   $scope.color = 'red';
@@ -74,10 +39,48 @@ testingAngluarApp.controller('testingAngularCtrl', function ($rootScope,$scope, 
     }
   })
 
-  // Using the weather service
-  //console.log(weatherService.getWeatherTemp('Lagos', 'Nigeria'));
+  /**
+   * DIRECTIVES TESTING BEGINS HERE
+   */
+
+  $scope.header = 'This is a Jumbotron';
+  $scope.message = 'With a nice maessage...';
+
+  // PROMISES
+  // Note the $timeout service angular returns a promise
+  function add(a, b) {
+    return $timeout(function () {
+      return a + b;
+    }, 5)
+  }
+
+  // Returns a promise object
+  console.log(add(5,3));
+
+  // '.then' a method that all promises have
+  add(5,3).then(function (result) {
+    console.log(result);
+  })
+
+  // Promise chaining is using the result of the 
+  // 1st promise to do more things
+  add(3, 8).then(function (result) {
+    console.log("------- Chaining Promises ---------")
+    console.log("Chain 0 -- ", result);
+    return result;
+  }).then(function (result) {
+    console.log("Chain 1 --", add(result, 8))
+    return add(result, 8);
+  }).then(function (result) {
+    console.log("Chain 2 --", add(result, 6))
+    return add(result, 6);
+  }).then(function (result) {
+    console.log("Chain 3 --", Array(result).join('*'));
+    return Array(result).join('*');
+  })
+
  
-});
+}); // End of controller
 
 // Filters return a function
 testingAngluarApp.filter('warmestDestinations', function () {
@@ -167,3 +170,10 @@ testingAngluarApp.directive('card', function () {
         template:'<div class="card {{ color }}" ng-transclude> </div>'
     }
 })
+
+testingAngluarApp.directive('jumbotron', function () {
+  return {
+    templateUrl: 'template/jumbotron.html'      
+  }
+})
+
