@@ -125,7 +125,7 @@ testingAngluarApp.directive('destinationsDirective', function () {
       var controller = function ($http, $rootScope, $scope) {
         console.log($scope.weatherApiUrl)
         $scope.getWeather = function (destination) {
-          $http.get($scope.weatherApiUrl + destination.city + ',' + destination.country + $scope.weatherApiKey)
+          $http.get($scope.weatherApiUrl + destination.city + ',' + destination.country + $scope.weatherApiKey)``
           .then(function success(response) {
             if(response){
               // Assign a new object to the destination object
