@@ -209,8 +209,44 @@ describe('Testing AngularJS Test Suite', function(){
 
   })
 
-  
 
+  /**
+   *  Testing custom directives from the book
+   */
+  describe('Testing custom directives from the book', function () {
+    var scope, element;
+
+    beforeEach(module('testingAngularApp'));
+    //beforeEach(module('template/jumbotron.html'));
+
+    beforeEach(inject(function ($compile, $rootScope) {
+
+      scope = $rootScope.$new();
+      
+      scope.header = 'Hello, Jumbotron';
+      scope.message = 'With a nice maessage...';
+
+      // Get the element
+      element = angular.element('<jumbotron></jumbotron>');
+      // Compile it and bind it to a scope
+      $compile(element)(scope);
+      // Trigger the digest cycle
+      scope.$digest();
+      
+    }))
+
+    it('It should contain a header', function () {
+      var header = element.find('h1');
+      expect(header.text()).toBe('Hello, Jumbotron'); 
+
+    })
+
+    it('It shold contain a message', function () {
+      var p = element.find('p');
+      expect(p.text()).toBe('With a nice maessage...');
+    })
+
+  })
 
 
 });
