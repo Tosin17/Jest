@@ -1,0 +1,76 @@
+<!doctype html>
+<html ng-app="practice">
+<head>
+    <title>UI Router</title>
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/simple-sidebar.css">
+</head>
+    <body>
+        
+        <div id="wrapper" class="container-fluid">
+            <!-- /#sidebar-wrapper -->
+            <div class="row">
+                <div class="col-md-3">
+                    <!-- Sidebar -->
+                    <div id="sidebar-wrapper">
+                        <ul class="sidebar-nav">
+                            <li class="sidebar-brand">
+                                <a href="#/">
+                                    UI ROUTE
+                                </a>
+                            </li>
+                             <!-- Using url -->
+                            <li>
+                                <a href="#/">Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="#/register">Register</a>
+                            </li>
+                            <li>
+                                <a href="#/passData/Denzel Cole/de@www.com">Pass Data</a>
+                            </li>
+                            <li>
+                                <a href="#/passDataSquash/-/~">Pass Data Squash</a>
+                            </li>
+                            <!-- $state service -->
+                            <li>
+                                <a href="#/calc">Calculate</a>
+                            </li>
+                            <hr>
+                             <!-- Using state name -->
+                            <li>
+                                <a ui-sref="dashboard()">Dashboard</a>
+                            </li>
+                            <li>
+                                <a ui-sref="register()">Register</a>
+                            </li>
+                            <li>
+                                <a ui-sref="passData({stdName: 'Denzel Cole', stdEmail: 'de@www.com'})">Pass Data</a>
+                            </li>
+                            <li>
+                                <a ui-sref="passDataI({stdName: 'Jermaine Dupri', stdEmail: 'de@www.com'})">Pass Data 2</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                     <!-- Page Content -->
+                    <div id="page-content-wrapper">
+                        <!-- <h1>Content here</h1> -->
+                        <ui-view></ui-view>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../scripts/angular.js"></script>
+        <script src="../scripts/ui-router.js"></script>
+        <script src="../scripts/app.js"></script>
+        <script src="js/routes.js"></script>
+        <script src="js/dashboardController.js"></script>
+        <script src="js/registerController.js"></script>
+        <script src="js/passDataController.js"></script>
+        <script src="js/calcController.js"></script>
+        <script src="js/calcResultController.js"></script>
+    </body>
+</html>

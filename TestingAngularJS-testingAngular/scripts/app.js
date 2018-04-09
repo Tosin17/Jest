@@ -1,3 +1,3 @@
 (function () {
-    angular.module('practice', []);
+    angular.module('practice', ['ui.router']);
 })()
