@@ -54,5 +54,27 @@
             //$urlRouterProvider.otherwise('/');
 
        }
-   ]) 
+   ])
+    
+})();
+
+(function () {
+    //.run is executed 1ce a module is created. It used for initializing ng-app
+    angular.module('practice').run(['$rootScope', function ($rootScope) {
+        // Initialize the broadcast events when the module is created...
+        // Initalize global vars and functions...
+       
+            $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams, options) {
+                console.log("Is $stateChangeStart");
+                console.log(toState);
+                console.log(fromState);
+            })
+    
+            $rootScope.$on('$stateChangeSuccess', function (e, toState, toParams, fromState, fromParams, options) {
+                console.log("Is $stateChangeSuccess");
+                console.log(toState);
+                console.log(fromState);
+            })
+        
+        }]);
 })()

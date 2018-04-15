@@ -1,3 +1,4 @@
 <button type="button" ng-click="back()"><< Back</button>
 <h1>Results</h1>
-<p>result: {{result}}</p>
+<p ng-show="isLoading === true">Loading...</p>
+<p ng-show="isLoading === false">result: {{result}}</p>
