@@ -1,4 +1,23 @@
 <div>
     <h1>{{heading}}</h1>
     <p>{{content}}</p>
-</div>
+    <br>
+    <form name="form" novalidate>
+        <div class="addFields" ng-repeat="fieldValue in formFieldValues track by $index">
+                <input type="text" name="app{{$index}}" ng-model="fieldValue.app" ng-model-options="{debounce: 500}" ng-required="true">&nbsp;&nbsp;
+                <select name="test2" ng-model="fieldValue.relevance" name="relevance{{$index}}" ng-required="true">
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <button ng-hide="$first" class="btn-default" ng-click="removeFields($index)">-</button>
+                &nbsp;&nbsp;
+                <button class="btn-default" ng-disabled="!fieldValue.app || !fieldValue.relevance || duplicateValues"
+                ng-class="fieldValue.relevance && fieldValue.app && !duplicateValues ? 'btn-primary' : 'btn-default'" ng-click="addFields()">+</button>
+                <span style="color: red" ng-if="duplicateValues && $index === errorIndex">Duplicate fields error</span>
+            </div>    
+            <button class="btn-default" ng-disabled="!form.$valid || duplicateValues"
+            ng-class="form.$valid && !duplicateValues ? 'btn-primary' : 'btn-default'" ng-click="submitForm()">Apply</button>
+            <button class="btn-default" ng-click="reset()">Cancel</button>
+        </div>
+    </form>

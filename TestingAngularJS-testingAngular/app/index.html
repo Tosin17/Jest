@@ -15,7 +15,7 @@
   <body ng-controller="testingAngularCtrl">
     <header><h1>{{title}}</h1></header>
 
-    <!-- <form name="destinationForm" ng-submit="addDestination()">
+    <form name="destinationForm" ng-submit="addDestination()">
       City: <input name="city" type="text" ng-model="newDestination.city" />
       Country: <input name="country" type="text" ng-model="newDestination.country" /> <br />
       <input type="submit" value="Add" />
@@ -32,7 +32,7 @@
       <div ng-repeat="destination in destinations | warmestDestinations: 10">
         <span ng-if="destination.climate.weather">{{destination.city}}, {{destination.country}}</span>
       </div>
-    </section> -->
+    </section>
 
     <!-- <card color="{{color}}">
         <h3>Card number 1</h3>

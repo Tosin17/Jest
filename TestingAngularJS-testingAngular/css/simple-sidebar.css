@@ -1,4 +1,17 @@
-/* Sidebar Styles */
+/* 
+.box-container {
+  width: 250px;
+  height: 250px;
+  border: 2px solid black;
+  box-sizing: padding-box !important;
+  padding: 30px;
+}
+
+.box-container__box {
+  background: rgb(114, 114, 114);
+  width: 250px;
+  height: 250px;
+} */
 
 .sidebar-nav {
   position: relative;
@@ -36,7 +49,7 @@
   height: 65px;
   font-size: 18px;
   line-height: 60px;
-}
+} 
 
 .sidebar-nav>.sidebar-brand a {
   color: #999999;
@@ -51,6 +64,16 @@
     padding: 0px;
     padding-right: 0px;
     padding-left: 0px;
+}
+
+.addFields {
+  display: flex;
+}
+
+.addFields select{
+  width: 40%;
+  margin-right: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 
