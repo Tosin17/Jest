@@ -1,3 +1,5 @@
+var log = console.log;
+
 /*
 var a = 47, 
     b = 57;
@@ -161,7 +163,25 @@ for (var i = 0; i < people.length; i++) {
 }
 */
 
+/*
+var people = ['Tman', 'Tboy', 'Twan', 'TY']
+var peepsList = document.getElementById('people-list');
 
+for (var i = 0; i < people.length; i++) {
+    var person = people[i];
+    var element = document.createElement('li');
+    element.innerHTML = person;
+
+    addEvent(person, element);
+}
+
+function addEvent(person, element) {
+    element.addEventListener('click', function(){
+        alert(person + ' was clicked!');
+    });
+    peepsList.appendChild(element);
+}
+*/
 
 // ---------- The THIS keyword -------------
 /*
@@ -227,7 +247,6 @@ obj.printPerson();
 arr.forEach(console.log, console);
 */
 
-var log = console.log;
 
 // ------- CALL, APPLY and BIND ----------
 
